@@ -1,5 +1,6 @@
 package luke932.Spring_Web.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,4 +25,10 @@ public class PrenotazioneService {
 		return this.prn;
 	}
 
+	public boolean makeReservation(LocalDate date, String workstationId) {
+		if (date.isBefore(LocalDate.now().plusDays(2))) {
+			return false;
+		}
+		return false;
+	}
 }
