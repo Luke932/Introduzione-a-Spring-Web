@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import luke932.Spring_Web.entities.Postazione;
+import luke932.Spring_Web.entities.TipoPostazione;
 import luke932.Spring_Web.service.PostazioneService;
 
 @RestController
@@ -34,4 +36,10 @@ public class PostazioneController {
 	public List<Postazione> getPositions() {
 		return pstS.getPositions();
 	}
+
+	@GetMapping("tipo&citta")
+	public List<Postazione> searchPositionByTipoCitta(@RequestParam TipoPostazione tipo, @RequestParam String citta) {
+		return pstS.findByTipoandCittà(tipo, citta);
+	}
+
 }
