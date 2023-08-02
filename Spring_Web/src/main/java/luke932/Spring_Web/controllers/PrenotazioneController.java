@@ -1,16 +1,15 @@
 package luke932.Spring_Web.controllers;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,16 +28,7 @@ public class PrenotazioneController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Prenotazione saveBook(@RequestBody NewPostazioneBody body) throws Exception {
-		boolean dataOccupata = false;
-		LocalDate dataCorrente = body.getDate();
-
-		for (Prenotazione p : bookS.getBookings())
-			if (p.getDataPrenotazione().equals(dataCorrente)) {
-				dataOccupata = true;
-				throw new Exception("La postazione è già occupata in questa data");
-			}
-
-		return (dataOccupata) ? null : bookS.save(body);
+		return bookS.save(body);
 	}
 
 	// #GET ritorna lista postazioni
@@ -47,14 +37,15 @@ public class PrenotazioneController {
 		return bookS.getBookings();
 	}
 
-	@PostMapping("/makeReservation")
-	public ResponseEntity<String> makeReservation(@RequestParam LocalDate date, @RequestParam String workstationId) {
-		boolean success = bookS.makeReservation(date, workstationId);
-		if (success) {
-			return ResponseEntity.ok("Prenotazione effettuata con successo");
-		} else {
-			return ResponseEntity.badRequest().body("Errore durante la prenotazione");
-		}
+	@GetMapping("/{id_prenotazione}")
+	public Prenotazione findById(@PathVariable int id) throws Exception {
+		return bookS.findByid(id).orElseThrow(() -> new Exception("ID prenotazione non trovata"));
+	}
+
+	@DeleteMapping("/id_prenotazione")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void findByIdAndDelete(@PathVariable int id) {
+		bookS.findByIdandDelete(id);
 	}
 
 }

@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -33,6 +36,22 @@ public class UtenteController {
 	@GetMapping
 	public List<Utente> getUsers() {
 		return userP.getUsers();
+	}
+
+	@GetMapping("/{id_utente}")
+	public Utente findById(@PathVariable int id) throws Exception {
+		return userP.findById(id).orElseThrow(() -> new Exception("ID utente non trovato"));
+	}
+
+	@PutMapping("/{id_utente}")
+	public Utente findByIdAndUpdate(@PathVariable int id, @RequestBody Utente body) throws Exception {
+		return userP.findByIdAndUpdate(id, body).orElseThrow(() -> new Exception("ID utente non trovato"));
+	}
+
+	@DeleteMapping("/{id_utente}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void findByIdAndDelete(@PathVariable int id) {
+		userP.findByIdAndDelete(id);
 	}
 
 }

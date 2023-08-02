@@ -2,6 +2,7 @@ package luke932.Spring_Web.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Random;
 
@@ -16,7 +17,7 @@ public class UtenteService {
 
 	public Utente save(Utente user) {
 		Random rndm = new Random();
-		user.setId(rndm.nextInt());
+		user.setId(Math.abs(rndm.nextInt()));
 		this.userP.add(user);
 		return user;
 	}
@@ -33,6 +34,31 @@ public class UtenteService {
 				u = utenteCorrente;
 
 		return Optional.ofNullable(u);
+	}
+
+	public void findByIdAndDelete(int id) {
+		ListIterator<Utente> iterator = this.userP.listIterator();
+
+		while (iterator.hasNext()) {
+			Utente currentUser = iterator.next();
+			if (currentUser.getId() == id)
+				iterator.remove();
+		}
+	}
+
+	public Optional<Utente> findByIdAndUpdate(int id, Utente users) {
+		Utente found = null;
+
+		for (Utente currentUser : userP) {
+			if (currentUser.getId() == id) {
+				found = currentUser;
+				found.setId(id);
+				found.setUsername(users.getUsername());
+				found.setNomeCompleto(users.getNomeCompleto());
+				found.setEmail(users.getEmail());
+			}
+		}
+		return Optional.ofNullable(found);
 	}
 
 }
