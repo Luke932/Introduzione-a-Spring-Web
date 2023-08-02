@@ -2,6 +2,7 @@ package luke932.Spring_Web.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class PostazioneService {
 
 	public Postazione save(Postazione pst) {
 		Random rndm = new Random();
-		pst.setId(rndm.nextLong());
+		pst.setId(rndm.nextInt());
 		this.postazioni.add(pst);
 		return pst;
 	}
@@ -33,6 +34,16 @@ public class PostazioneService {
 			}
 		}
 		return result;
+	}
+
+	public Optional<Postazione> findById(int id) {
+		Postazione u = null;
+
+		for (Postazione postazioneCorrente : postazioni)
+			if (postazioneCorrente.getId() == id)
+				u = postazioneCorrente;
+
+		return Optional.ofNullable(u);
 	}
 
 }

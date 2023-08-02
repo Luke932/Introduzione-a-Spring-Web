@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import luke932.Spring_Web.entities.Prenotazione;
+import luke932.Spring_Web.payloads.NewPostazioneBody;
 import luke932.Spring_Web.service.PrenotazioneService;
 
 @RestController
@@ -24,12 +25,20 @@ public class PrenotazioneController {
 	@Autowired
 	PrenotazioneService bookS;
 
-	// #POST salvataggio postazioni
+	// #POST salvataggio prenotazione
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Prenotazione saveBook(@RequestBody Prenotazione body) {
-		Prenotazione createUser = bookS.save(body);
-		return createUser;
+	public Prenotazione saveBook(@RequestBody NewPostazioneBody body) throws Exception {
+		boolean dataOccupata = false;
+		LocalDate dataCorrente = body.getDate();
+
+		for (Prenotazione p : bookS.getBookings())
+			if (p.getDataPrenotazione().equals(dataCorrente)) {
+				dataOccupata = true;
+				throw new Exception("La postazione è già occupata in questa data");
+			}
+
+		return (dataOccupata) ? null : bookS.save(body);
 	}
 
 	// #GET ritorna lista postazioni
